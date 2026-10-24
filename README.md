@@ -108,6 +108,15 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modul
 
 > ffmpeg 只在「动图取首帧 / bmp·tiff·ico·avif·heic 等格式转码」时需要；只有 jpg/png 图片的场景没有它也能用。
 
+### 配置防篡改
+
+插件内置关键配置的安全基线，防止配置被意外/恶意修改导致功能失效或 Key 泄露：
+
+- **API Key 只认设置面板与环境变量**：即使有人在 `cordis.patch.yml` 里填了 `apiKey`，插件也会忽略该值（防止 Key 被写进配置文件/仓库）；
+- **启动自检**：插件每次启动校验 `cordis.patch.yml` 的关键项（`apiKey` 必须为空、`model`/`timeoutMs`/`ffmpegPath` 基线），发现被改会自动备份并恢复基线；
+- **运行时兜底**：`model`/`baseUrl`/`timeoutMs`/CDN 白名单等都有代码内置默认值，配置缺失或被改坏不影响功能；
+- 注意：DSH 对 bundle patch 有寻址校验，patch 文件被改后插件会暂时无法加载（unaddressable），恢复文件后需重启 DSH 或重装 bundle。
+
 ## 隐私与安全
 
 - 图片会以 **base64** 直接发给智谱接口（`open.bigmodel.cn`），本插件不落盘、不缓存图片内容；
