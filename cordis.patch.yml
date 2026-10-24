@@ -1,0 +1,15 @@
+# dsh-wechat-emoji —— DSH bundle patch
+# 把插件挂进 profile 的配置树（bundle 层）。安装：link 依赖 + node_modules junction + bundles 条目。
+- insert:
+    - id: dsh-wechat-emoji
+      name: dsh-wechat-emoji
+      config:
+        # 智谱 API Key（GLM-4V-Flash 免费模型）：
+        #   · 在此填你的 Key，或留空、改用环境变量 ZHIPU_API_KEY
+        #   · 获取：https://open.bigmodel.cn/ → 注册 → API 密钥（新用户送免费额度）
+        #   · ⚠️ 别把自己的 Key 提交到公开仓库
+        apiKey: ""
+        model: glm-4v-flash
+        timeoutMs: 120000
+        # 可选：GIF/非常见格式转码用的 ffmpeg（不填则依次找环境变量 FFMPEG、~/.dsh/bili-whale/bin/ffmpeg.exe、PATH）
+        ffmpegPath: ""
