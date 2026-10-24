@@ -104,6 +104,7 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modul
 | `ffmpegPath` | 自动找 | ✅ | 转码用；不填依次找 `FFMPEG` 环境变量、`~/.dsh/bili-whale/bin/ffmpeg.exe`、PATH |
 | `allowWechatCdnDownload` | `true` | ✅ | 允许本机缓存缺失时从微信 CDN 补图（域名白名单 + md5 核验，见下） |
 | `wechatCdnHosts` | 微信域默认列表 | ✅ | CDN 域名后缀白名单；默认覆盖 `weixin.qq.com` / `qpic.cn` / `gtimg.cn` / `qq.com` 等腾讯域 |
+| `wechatCdnLegacyHosts` | `{"mmsns.qpic.cn":"shmmsns.qpic.cn"}` | ✅ | 旧版腾讯域名 → 兼容域名映射；下载旧地址时先映射，并强制 HTTPS、核验 md5 |
 
 > ffmpeg 只在「动图取首帧 / bmp·tiff·ico·avif·heic 等格式转码」时需要；只有 jpg/png 图片的场景没有它也能用。
 
@@ -111,6 +112,7 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modul
 
 - 图片会以 **base64** 直接发给智谱接口（`open.bigmodel.cn`），本插件不落盘、不缓存图片内容；
 - **微信 CDN 补图**（`cdnUrl`/`cdnMd5`）有硬安全边界：只接受域名后缀命中白名单的腾讯微信地址（默认 `weixin.qq.com`/`qpic.cn`/`gtimg.cn`/`qq.com` 等，可配），且必须提供原消息 md5 摘要、下载后逐字节核验，不匹配立即丢弃；重定向后仍会复查域名；下载的临时文件用完即删；
+- **旧版地址兼容**：历史消息里的旧腾讯域名（如 `mmsns.qpic.cn`）会先映射到兼容域名（如 `shmmsns.qpic.cn`），http 一律强制升级为 **HTTPS**，映射后照常过白名单与 md5 核验；映射表可在配置里扩展；
 - 不在本地保存任何聊天数据；面板保存的 Key 只存在于 DSH 的配置里；
 - 建议只在可信会话里给 agent 开放这个工具（模型侧工具可按 preset 隔离）。
 
