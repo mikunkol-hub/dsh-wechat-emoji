@@ -1,6 +1,6 @@
 {
   "name": "dsh-wechat-emoji",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "让 DSH agent 识别微信/QQ 表情包与聊天截图并判断对方情绪（GLM-4V-Flash），暴露 wechat_emoji_analyze 工具。",
   "type": "module",
   "main": "lib/index.js",
