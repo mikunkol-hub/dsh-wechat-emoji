@@ -2,7 +2,8 @@
 
 让 DSH 的 agent **看懂聊天里的表情包 / 梗图 / 聊天截图，并判断对方情绪**。
 
-注册一个模型侧工具 `wechat_emoji_analyze`，底层调用智谱 **GLM-4V-Flash**（免费视觉大模型）。
+- 注册一个模型侧工具 `wechat_emoji_analyze`，底层调用智谱 **GLM-4V-Flash**（免费视觉大模型）；
+- 自带**设置页面板**：装完在 DeepSeek 设置页里就能填 API Key，不用碰文件。
 
 ## 能力
 
@@ -27,7 +28,7 @@
 
 ### 0) 准备
 
-- 一个 DSH profile（`~/.dsh/profiles/<名字>`）
+- 一个 DSH profile
 - 智谱 API Key：[open.bigmodel.cn](https://open.bigmodel.cn/) 注册后在「API 密钥」创建（GLM-4V-Flash 免费，新用户送额度）
 
 ### 1) 安装
@@ -69,33 +70,43 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modul
 > 不声明的话 import 失败但不报错——插件静默停在 `fiberPhase: null`，工具永远不会出现。
 > （本插件已正确声明，这一条是给开发者参照的。）
 
-### 2) 配置 Key（二选一）
+### 2) 配置 API Key
 
-- **环境变量**（推荐）：设 `ZHIPU_API_KEY` 后重启 DSH，`cordis.patch.yml` 里的 `apiKey` 留空即可；
-- **配置文件**：在 `cordis.patch.yml` 的 `apiKey` 填你的 Key。
+**方式 A：设置页面板（推荐，最省事）**
 
-改完 `cordis.patch.yml` 保存即触发 profile 热重载（一般不用重启 DSH）。
+1. DeepSeek 设置页 → 插件（Plugins）→ 点进 **dsh-wechat-emoji**；
+2. 详情页里有一个「智谱 API Key」设置区：粘贴 Key → **保存**；
+3. 保存即热重载生效，不用重启、不用改文件。已设置的 Key 只显示末 4 位。
+
+**方式 B：环境变量**
+
+设 `ZHIPU_API_KEY` 后重启 DSH（面板里留空时自动读这个）。
+
+**方式 C：配置文件（手动）**
+
+在 `cordis.patch.yml` 的 `apiKey` 填你的 Key，保存即触发 profile 热重载。
 
 ### 3) 验证
 
-任意会话里让 agent 发一张表情包路径给它试试；或直接看工具列表里是否出现 `wechat_emoji_analyze`。
+- 面板保存后可以直接在会话里让 agent 分析一张表情包；
+- 或看工具列表里是否出现 `wechat_emoji_analyze`。
 
-## 配置（cordis.patch.yml）
+## 配置
 
-| 字段 | 默认 | 说明 |
-|---|---|---|
-| `apiKey` | `""` | 智谱 API Key；留空则读环境变量 `ZHIPU_API_KEY` |
-| `model` | `glm-4v-flash` | 视觉模型名 |
-| `baseUrl` | 智谱 v4 chat/completions | 兼容 OpenAI 格式的地址 |
-| `timeoutMs` | `120000` | 单次请求超时 |
-| `ffmpegPath` | 自动找 | 转码用；不填依次找 `FFMPEG` 环境变量、`~/.dsh/bili-whale/bin/ffmpeg.exe`、PATH |
+| 字段 | 默认 | 面板可改 | 说明 |
+|---|---|---|---|
+| `apiKey` | `""` | ✅（掩码输入） | 智谱 API Key；留空则读环境变量 `ZHIPU_API_KEY` |
+| `model` | `glm-4v-flash` | ✅ | 视觉模型名 |
+| `baseUrl` | 智谱 v4 chat/completions | ✅ | 兼容 OpenAI 格式的地址 |
+| `timeoutMs` | `120000` | ✅ | 单次请求超时 |
+| `ffmpegPath` | 自动找 | ✅ | 转码用；不填依次找 `FFMPEG` 环境变量、`~/.dsh/bili-whale/bin/ffmpeg.exe`、PATH |
 
 > ffmpeg 只在「动图取首帧 / bmp·tiff·ico·avif·heic 等格式转码」时需要；只有 jpg/png 图片的场景没有它也能用。
 
 ## 隐私与安全
 
 - 图片会以 **base64** 直接发给智谱接口（`open.bigmodel.cn`），本插件不落盘、不缓存图片内容；
-- 不在本地保存任何聊天数据；
+- 不在本地保存任何聊天数据；面板保存的 Key 只存在于 DSH 的配置里；
 - 建议只在可信会话里给 agent 开放这个工具（模型侧工具可按 preset 隔离）。
 
 ## 已知限制
