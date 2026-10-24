@@ -35,7 +35,7 @@
 **方式 A：npm 安装（推荐，已发布到 npm）**
 
 ```bash
-dsh plugin --profile <你的配置档名> add dsh-wechat-emoji
+dsh plugin --profile web add dsh-wechat-emoji
 ```
 
 > 要出现在 DSH 插件商城里，插件必须有 npm 包 —— 本插件已发布，直接装即可。
@@ -43,14 +43,14 @@ dsh plugin --profile <你的配置档名> add dsh-wechat-emoji
 **方式 B：仅源码安装（GitHub）**
 
 ```bash
-dsh plugin --profile <你的配置档名> add github:mikunkol-hub/dsh-wechat-emoji
+dsh plugin --profile web add github:mikunkol-hub/dsh-wechat-emoji
 ```
 
 **方式 C：手动 link（开发/离线场景）**
 
 ```powershell
 # 把插件目录链接进 profile 的 node_modules（junction）
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\<你的配置档名>\node_modules\dsh-wechat-emoji" `
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modules\dsh-wechat-emoji" `
   -Target "<插件源码目录>"
 ```
 
