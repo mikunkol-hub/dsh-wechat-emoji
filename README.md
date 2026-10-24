@@ -11,6 +11,8 @@
 |---|---|
 | `image` | 本地图片路径（支持**无扩展名**的微信缓存文件）或 http(s) URL；jpg/jpeg/png/apng/webp(含动图)/gif(取首帧)/bmp/tiff/ico/avif/heic |
 | `hint` | 可选。这条消息的文字/上下文（如「今天又加班」），显著提高情绪判断准确率 |
+| `cdnUrl` | 可选。**本机缓存缺失时**，白名单原消息提供的微信 CDN 下载地址（仅接受腾讯微信域名的 http(s) 地址） |
+| `cdnMd5` | 可选。原消息的 md5 摘要（32 位十六进制）；提供 `cdnUrl` 时必填，下载后逐字节核验，不匹配即拒绝 |
 
 输出（结构化 JSON）：
 
@@ -100,12 +102,15 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\web\node_modul
 | `baseUrl` | 智谱 v4 chat/completions | ✅ | 兼容 OpenAI 格式的地址 |
 | `timeoutMs` | `120000` | ✅ | 单次请求超时 |
 | `ffmpegPath` | 自动找 | ✅ | 转码用；不填依次找 `FFMPEG` 环境变量、`~/.dsh/bili-whale/bin/ffmpeg.exe`、PATH |
+| `allowWechatCdnDownload` | `true` | ✅ | 允许本机缓存缺失时从微信 CDN 补图（域名白名单 + md5 核验，见下） |
+| `wechatCdnHosts` | 微信域默认列表 | ✅ | CDN 域名后缀白名单；默认覆盖 `weixin.qq.com` / `qpic.cn` / `gtimg.cn` / `qq.com` 等腾讯域 |
 
 > ffmpeg 只在「动图取首帧 / bmp·tiff·ico·avif·heic 等格式转码」时需要；只有 jpg/png 图片的场景没有它也能用。
 
 ## 隐私与安全
 
 - 图片会以 **base64** 直接发给智谱接口（`open.bigmodel.cn`），本插件不落盘、不缓存图片内容；
+- **微信 CDN 补图**（`cdnUrl`/`cdnMd5`）有硬安全边界：只接受域名后缀命中白名单的腾讯微信地址（默认 `weixin.qq.com`/`qpic.cn`/`gtimg.cn`/`qq.com` 等，可配），且必须提供原消息 md5 摘要、下载后逐字节核验，不匹配立即丢弃；重定向后仍会复查域名；下载的临时文件用完即删；
 - 不在本地保存任何聊天数据；面板保存的 Key 只存在于 DSH 的配置里；
 - 建议只在可信会话里给 agent 开放这个工具（模型侧工具可按 preset 隔离）。
 
