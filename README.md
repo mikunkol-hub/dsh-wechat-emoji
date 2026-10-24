@@ -38,7 +38,6 @@
 dsh-wechat-emoji
 ```
 
-
 **方式 B：仅源码安装（GitHub）**
 
 ```bash
