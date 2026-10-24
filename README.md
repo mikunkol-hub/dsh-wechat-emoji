@@ -35,7 +35,7 @@
 **方式 A：npm 安装（推荐，已发布到 npm）**
 
 ```bash
-dsh plugin --profile web add dsh-wechat-emoji
+dsh-wechat-emoji
 ```
 
 > 要出现在 DSH 插件商城里，插件必须有 npm 包 —— 本插件已发布，直接装即可。
