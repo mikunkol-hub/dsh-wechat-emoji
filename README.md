@@ -30,12 +30,28 @@
 - 一个 DSH profile（`~/.dsh/profiles/<名字>`）
 - 智谱 API Key：[open.bigmodel.cn](https://open.bigmodel.cn/) 注册后在「API 密钥」创建（GLM-4V-Flash 免费，新用户送额度）
 
-### 1) 安装（link 方式）
+### 1) 安装
+
+**方式 A：npm 安装（推荐，已发布到 npm）**
+
+```bash
+dsh plugin --profile <你的配置档名> add dsh-wechat-emoji
+```
+
+> 要出现在 DSH 插件商城里，插件必须有 npm 包 —— 本插件已发布，直接装即可。
+
+**方式 B：仅源码安装（GitHub）**
+
+```bash
+dsh plugin --profile <你的配置档名> add github:mikunkol-hub/dsh-wechat-emoji
+```
+
+**方式 C：手动 link（开发/离线场景）**
 
 ```powershell
 # 把插件目录链接进 profile 的 node_modules（junction）
-New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\desktop\node_modules\dsh-wechat-emoji" `
-  -Target "$env:USERPROFILE\.dsh\plugins\dsh-wechat-emoji"
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\<你的配置档名>\node_modules\dsh-wechat-emoji" `
+  -Target "<插件源码目录>"
 ```
 
 然后在 profile 的 `package.json` 里加两处（`pnpm install` 一遍以登记依赖）：
@@ -43,7 +59,7 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\desktop\node_m
 ```jsonc
 {
   "dependencies": {
-    "dsh-wechat-emoji": "link:C:/Users/<你>/.dsh/plugins/dsh-wechat-emoji"
+    "dsh-wechat-emoji": "link:<插件源码目录>"
   },
   "dsh": { "profile": { "bundles": [ "dsh-wechat-emoji" ] } }
 }
@@ -53,6 +69,7 @@ New-Item -ItemType Junction -Path "$env:USERPROFILE\.dsh\profiles\desktop\node_m
 > `package.json` 必须写 `"peerDependencies": { "@deepseek-ai/dsh-tools": "*" }`。
 > DSH 加载 **link 安装**的插件时，只有 manifest 的 `dependencies` / `peerDependencies` 里列出的宿主包才会被解析；
 > 不声明的话 import 失败但不报错——插件静默停在 `fiberPhase: null`，工具永远不会出现。
+> （本插件已正确声明，这一条是给开发者参照的。）
 
 ### 2) 配置 Key（二选一）
 
