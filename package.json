@@ -26,6 +26,14 @@
     "emotion",
     "vision"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikunkol-hub/dsh-wechat-emoji.git"
+  },
+  "homepage": "https://github.com/mikunkol-hub/dsh-wechat-emoji#readme",
+  "bugs": {
+    "url": "https://github.com/mikunkol-hub/dsh-wechat-emoji/issues"
+  },
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": "*"
